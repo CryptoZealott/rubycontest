@@ -85,10 +85,10 @@ command :list do |c|
       mutex.synchronize { Rubycon::ServerInfo.new(s) }
     end
     server_infos.select!{|i| i.reachable?}
-    #name_max_width = ($config.servers.map {|s| s.name.length}).max
-    #map_max_width = (server_infos.map{|i| i.map.length}).max
-    #players_max_width = (server_infos.map{|i| "#{i.players_count}/#{i.players_max}".length}).max
-    #ping_max_width = (server_infos.map{|i| i.ping.to_s.length}).max
+    name_max_width = ($config.servers.map {|s| s.name.length}).max
+    map_max_width = (server_infos.map{|i| i.map.length}).max
+    players_max_width = (server_infos.map{|i| "#{i.players_count}/#{i.players_max}".length}).max
+    ping_max_width = (server_infos.map{|i| i.ping.to_s.length}).max
     
 
     $config.servers.zip(server_infos).each do |s, i|
