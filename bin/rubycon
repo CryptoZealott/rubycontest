@@ -71,6 +71,11 @@ command :list do |c|
                           :type => Integer
   c.action do |g, o, args|
     exit_now!('No servers added yet. Use `rubycon add` to add a new server') if $config.servers.empty?
+    name_max_width = ($config.servers.map {|s| s.name.length}).max
+    map_max_width = 0
+    players_max_width = 0
+    ping_max_width = 0
+
     spacing = o[:s] || 0
     puts "Server".ljust(name_max_width).bold + "Map".rjust(map_max_width + spacing).bold +
          "Players".rjust(players_max_width + spacing).bold +
