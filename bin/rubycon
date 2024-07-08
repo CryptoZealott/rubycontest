@@ -71,7 +71,10 @@ command :list do |c|
                           :type => Integer
   c.action do |g, o, args|
     exit_now!('No servers added yet. Use `rubycon add` to add a new server') if $config.servers.empty?
-
+    spacing = o[:s] || 0
+    puts "Server".ljust(name_max_width).bold + "Map".rjust(map_max_width + spacing).bold +
+         "Players".rjust(players_max_width + spacing).bold +
+         "Ping".rjust(ping_max_width + spacing).bold
     mutex = Thread::Mutex.new
     server_infos = Parallel.flat_map($config.servers) do |s|
       mutex.synchronize { Rubycon::ServerInfo.new(s) }
@@ -81,10 +84,7 @@ command :list do |c|
     map_max_width = (server_infos.map{|i| i.map.length}).max
     players_max_width = (server_infos.map{|i| "#{i.players_count}/#{i.players_max}".length}).max
     ping_max_width = (server_infos.map{|i| i.ping.to_s.length}).max
-    spacing = o[:s] || 0
-    puts "Server".ljust(name_max_width).bold + "Map".rjust(map_max_width + spacing).bold +
-      "Players".rjust(players_max_width + spacing).bold +
-      "Ping".rjust(ping_max_width + spacing).bold
+    
 
     $config.servers.zip(server_infos).each do |s, i|
       if i.nil?
