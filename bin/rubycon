@@ -75,6 +75,10 @@ command :list do |c|
     #map_max_width = 0
     #players_max_width = 0
     #ping_max_width = 0
+    mutex = Thread::Mutex.new
+    server_infos = Parallel.flat_map($config.servers) do |s|
+      mutex.synchronize { Rubycon::ServerInfo.new(s) }
+    end
     server_infos.select!{|i| i.reachable?}
     name_max_width = ($config.servers.map {|s| s.name.length}).max
     map_max_width = (server_infos.map{|i| i.map.length}).max
@@ -85,10 +89,10 @@ command :list do |c|
     puts "Server".ljust(name_max_width).bold + "Map".rjust(map_max_width + spacing).bold +
          "Players".rjust(players_max_width + spacing).bold +
          "Ping".rjust(ping_max_width + spacing).bold
-    mutex = Thread::Mutex.new
-    server_infos = Parallel.flat_map($config.servers) do |s|
-      mutex.synchronize { Rubycon::ServerInfo.new(s) }
-    end
+   # mutex = Thread::Mutex.new
+   # server_infos = Parallel.flat_map($config.servers) do |s|
+   #   mutex.synchronize { Rubycon::ServerInfo.new(s) }
+   # end
     server_infos.select!{|i| i.reachable?}
     name_max_width = ($config.servers.map {|s| s.name.length}).max
     map_max_width = (server_infos.map{|i| i.map.length}).max
